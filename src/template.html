@@ -13,6 +13,8 @@
   --muted: #5a6561;
   --surface: rgba(247, 248, 247, 0.9);
   --card: #f5f7f6;
+  --t0: #88b3a6; --t1: #5a9583; --t2: #2f7462; --t3: #154b3e;
+  --cpop: #6250d6; --csize: #eda100;
   --line: rgba(28, 35, 33, 0.14);
   --ink: #1c2321;
   --on-ink: #f4f6f5;
@@ -27,6 +29,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #101513; --fg: #e2e8e5; --muted: #93a19b; --surface: rgba(21, 28, 26, 0.88); --card: #161d1b;
+    --t0: #2f5a4e; --t1: #4b8a77; --t2: #79b8a4; --t3: #b5e3d3; --cpop: #9085e9; --csize: #c98500;
     --line: rgba(226, 232, 229, 0.14); --ink: #e2e8e5; --on-ink: #101513; --shadow: 0.45;
     --edge: rgba(8, 12, 11, 0.55); --ring: #e2e8e5;
     --p0: #5f9be6; --p1: #3a5a80; --p2: #444b47; --p3: #b39a4a; --p4: #ee8a3c; --p5: #f2554a; --p6: #ffc2d6;
@@ -35,6 +38,7 @@
 }
 :root[data-theme="dark"] {
   --bg: #101513; --fg: #e2e8e5; --muted: #93a19b; --surface: rgba(21, 28, 26, 0.88); --card: #161d1b;
+    --t0: #2f5a4e; --t1: #4b8a77; --t2: #79b8a4; --t3: #b5e3d3; --cpop: #9085e9; --csize: #c98500;
   --line: rgba(226, 232, 229, 0.14); --ink: #e2e8e5; --on-ink: #101513; --shadow: 0.45;
   --edge: rgba(8, 12, 11, 0.55); --ring: #e2e8e5;
   --p0: #5f9be6; --p1: #3a5a80; --p2: #444b47; --p3: #b39a4a; --p4: #ee8a3c; --p5: #f2554a; --p6: #ffc2d6;
@@ -199,15 +203,29 @@ svg.chart .wash { fill-opacity: 0.6; }
 .ms { font-family: var(--font-data); font-size: 10.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tablecard summary { padding: 2px 0; }
 .tablewrap { overflow-x: auto; margin-top: 10px; }
-#tbl { border-collapse: collapse; width: 100%; min-width: 600px; font-size: 12.5px; }
-#tbl caption { text-align: left; color: var(--muted); font-size: 11.5px; padding-bottom: 6px; }
-#tbl th, #tbl td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
-#tbl th:first-child, #tbl td:first-child { text-align: left; padding-left: 0; }
-#tbl thead th { color: var(--muted); font-weight: 600; font-size: 11.5px; }
-#tbl td { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
-#tbl td:first-child { font-family: var(--font-display); }
-#tbl tr.sum td { font-weight: 650; border-top: 1px solid var(--muted); }
+.dtable { border-collapse: collapse; width: 100%; min-width: 600px; font-size: 12.5px; }
+.dtable caption { text-align: left; color: var(--muted); font-size: 11.5px; padding-bottom: 6px; }
+.dtable th, .dtable td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.dtable th:first-child, .dtable td:first-child { text-align: left; padding-left: 0; }
+.dtable thead th { color: var(--muted); font-weight: 600; font-size: 11.5px; }
+.dtable td { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+.dtable td:first-child { font-family: var(--font-display); }
+.dtable tr.sum td { font-weight: 650; border-top: 1px solid var(--muted); }
 .below .source { max-width: 92ch; }
+.sec2 { padding-top: 28px; }
+.duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+.toolbar .seg button { white-space: nowrap; font-size: 12px; padding: 5px 8px; }
+.key2 { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); }
+.key2 span { display: inline-flex; align-items: center; gap: 6px; }
+.key2 i { display: inline-block; flex: none; }
+.key2 i.dot { width: 10px; height: 10px; border-radius: 50%; }
+.key2 i.sq { width: 12px; height: 10px; border-radius: 2px; }
+.key2 i.tick { width: 2.5px; height: 14px; border-radius: 2px; background: var(--fg); }
+svg.chart .mark { stroke: var(--fg); stroke-width: 2.5; stroke-linecap: round; }
+svg.chart tspan.vv { fill: var(--fg); font-weight: 600; }
+.rowhit { cursor: default; }
+@media (max-width: 860px) { .duo { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 720px) {
   .mult { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 14px; }
   h2 { font-size: 24px; }
@@ -297,7 +315,7 @@ svg.chart .wash { fill-opacity: 0.6; }
   <div id="tip" hidden></div>
 </div>
 
-<button type="button" class="peek" id="peek">Gràfiques: població per anells de distància <span aria-hidden="true">↓</span></button>
+<button type="button" class="peek" id="peek">Gràfiques: població, habitatge i llars per anells de distància <span aria-hidden="true">↓</span></button>
 
 <main class="below" id="charts" tabindex="-1">
   <div class="below-in">
@@ -331,11 +349,57 @@ svg.chart .wash { fill-opacity: 0.6; }
     </figure>
 
     <details class="card tablecard" id="tableCard">
-      <summary>Taula de dades per anells</summary>
-      <div class="tablewrap"><table id="tbl"></table></div>
+      <summary>Taula de dades: població per anells</summary>
+      <div class="tablewrap"><table id="tbl" class="dtable"></table></div>
     </details>
 
-    <p class="source">Fonts: Idescat, <a href="https://www.idescat.cat/pub/?id=pmh&amp;n=446&amp;lang=ca" target="_blank" rel="noopener">padró municipal</a> 1998–2025 i <a href="https://www.idescat.cat/pub/?id=shd&amp;n=1341&amp;lang=ca" target="_blank" rel="noopener">sèries històriques</a> 1981, 1986 i 1991; entre aquests anys s'interpola i cada any s'ajusta al total de Catalunya. 2026: avanç provisional per províncies. Cada municipi entra a l'anell on cau el seu centre; Barcelona es compta a part.</p>
+    <header class="sec-head sec2">
+      <h2>Habitatge i llars</h2>
+      <p class="lede" id="hlede"></p>
+    </header>
+
+    <div class="duo">
+      <figure class="card">
+        <figcaption class="fig-head">
+          <h3>Habitatges nous per cada 1.000 habitants i any</h3>
+          <p class="fig-sub">Habitatges que el 2021 eren primera residència, segons la dècada en què es van construir, dividits per la població mitjana de l'anell en aquella dècada.</p>
+        </figcaption>
+        <div class="key2" id="k1"></div>
+        <div class="plot" id="h1Box"><svg class="chart" id="h1" role="img" aria-label="Habitatges nous per cada 1.000 habitants i any, per anell i dècada de construcció"></svg><div class="ctip" id="h1Tip" hidden></div></div>
+      </figure>
+      <figure class="card">
+        <figcaption class="fig-head">
+          <h3>Persones per llar</h3>
+          <p class="fig-sub">Mitjana de persones per llar a cada cens. Entre 1991 i 2011 les llars es van fer més petites a tots els anells; entre 2011 i 2021, a gairebé tots han tornat a créixer una mica.</p>
+        </figcaption>
+        <div class="key2" id="k2"></div>
+        <div class="plot" id="h2Box"><svg class="chart" id="h2" role="img" aria-label="Persones per llar per anell als censos de 1991, 2001, 2011 i 2021"></svg><div class="ctip" id="h2Tip" hidden></div></div>
+      </figure>
+    </div>
+
+    <figure class="card">
+      <figcaption class="fig-head">
+        <h3>Llars noves i habitatges nous, en % de les llars a l'inici del període</h3>
+        <p class="fig-sub">Cada barra és el creixement del nombre de llars, partit en dues parts: el que ve del creixement de la població (amb la mateixa mida de llar) i el que ve del canvi de mida de les llars (positiu si són més petites). La marca vertical són els habitatges nous del mateix període. Quan la barra passa la marca, s'han format més llars que habitatges s'han construït.</p>
+      </figcaption>
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Període">
+          <button type="button" id="pr0" aria-pressed="true">1991–2021</button>
+          <button type="button" id="pr1" aria-pressed="false">1991–2001</button>
+          <button type="button" id="pr2" aria-pressed="false">2001–2011</button>
+          <button type="button" id="pr3" aria-pressed="false">2011–2021</button>
+        </div>
+        <div class="key2" id="k3"></div>
+      </div>
+      <div class="plot" id="h3Box"><svg class="chart" id="h3" role="img" aria-label="Creixement de les llars per anell, partit entre creixement de la població i canvi de mida de les llars, amb els habitatges nous"></svg><div class="ctip" id="h3Tip" hidden></div></div>
+    </figure>
+
+    <details class="card tablecard" id="tableCard2">
+      <summary>Taula de dades: llars i habitatges per anells</summary>
+      <div class="tablewrap"><table id="tbl2" class="dtable"></table></div>
+    </details>
+
+    <p class="source">Fonts: Idescat, <a href="https://www.idescat.cat/pub/?id=pmh&amp;n=446&amp;lang=ca" target="_blank" rel="noopener">padró municipal</a> 1998–2025 i <a href="https://www.idescat.cat/pub/?id=shd&amp;n=1341&amp;lang=ca" target="_blank" rel="noopener">sèries històriques</a> 1981, 1986 i 1991; entre aquests anys s'interpola i cada any s'ajusta al total de Catalunya. 2026: avanç provisional per províncies. Llars, persones per llar i habitatges per any de construcció: Idescat, <a href="https://www.idescat.cat/pub/?id=censph&amp;n=909&amp;lang=ca" target="_blank" rel="noopener">censos de població i habitatges</a> de 1991, 2001, 2011 i 2021. El cens del 2011 es va fer en part per enquesta i el del 2021 a partir de registres, i per això la comparació entre tots dos s'ha de llegir amb prudència. Els habitatges nous només compten els que el 2021 eren primera residència: no inclouen els buits, les segones residències ni els enderrocats. Cada municipi entra a l'anell on cau el seu centre; Barcelona es compta a part.</p>
   </div>
 </main>
 
@@ -343,6 +407,7 @@ svg.chart .wash { fill-opacity: 0.6; }
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
 <script>/*CHARTS*/</script>
 <script id="data" type="application/json">/*DATA*/</script>
+<script id="hdata" type="application/json">/*HDATA*/</script>
 <script>
 (function () {
   const D = JSON.parse(document.getElementById('data').textContent);
@@ -355,7 +420,7 @@ svg.chart .wash { fill-opacity: 0.6; }
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
   const sgn = v => (v > 0.5 ? '+' : v < -0.5 ? '−' : '');
-  const pctTxt = r => { const v = 100 * (r - 1); return (v >= 0.5 ? '+' : v <= -0.5 ? '−' : '') + fmt.format(Math.round(Math.abs(v))) + ' %'; };
+  const pctTxt = r => { const v = 100 * (r - 1); return (v >= 0.5 ? '+' : v <= -0.5 ? '−' : '') + fmt.format(Math.round(Math.abs(v))) + '\u00a0%'; };
   const people = v => v >= 1e6 || v <= -1e6 ? fmt2.format(Math.abs(v) / 1e6) + ' milions' : fmt.format(Math.round(Math.abs(v) / 1000)) + ' mil';
 
   // ---------- population ----------
@@ -390,7 +455,8 @@ svg.chart .wash { fill-opacity: 0.6; }
   function readTokens() {
     const cs = getComputedStyle(document.documentElement);
     const g = n => cs.getPropertyValue(n).trim();
-    T = { bg: new THREE.Color(g('--bg')), shadow: parseFloat(g('--shadow')) || 0.2, edge: g('--edge'), ring: new THREE.Color(g('--ring')), p: Array.from({ length: 7 }, (_, i) => g('--p' + i)), muted: g('--muted'), ink: g('--ink'), card: g('--card') };
+    T = { bg: new THREE.Color(g('--bg')), shadow: parseFloat(g('--shadow')) || 0.2, edge: g('--edge'), ring: new THREE.Color(g('--ring')), p: Array.from({ length: 7 }, (_, i) => g('--p' + i)), muted: g('--muted'), ink: g('--ink'), card: g('--card'),
+      t: Array.from({ length: 4 }, (_, i) => g('--t' + i)), cpop: g('--cpop'), csize: g('--csize') };
     const cols = T.p.map(v => new THREE.Color(v)), c = new THREE.Color();
     for (let i = 0; i < 256; i++) {
       const v = PMIN + (PMAX - PMIN) * i / 255;
@@ -620,8 +686,115 @@ svg.chart .wash { fill-opacity: 0.6; }
       el.setAttribute('viewBox', `0 0 ${mw} ${mh}`); el.innerHTML = g.svg;
       return g;
     });
+    drawHousing();
     updateCharts();
   }
+
+  // ---------- housing and households (censuses 1991–2021) ----------
+  const HD = JSON.parse(document.getElementById('hdata').textContent);
+  const HR = HD.rings.length;
+  const rName = r => r === 0 ? 'Barcelona' : r === HR - 1 ? 'Més de 60 km' : r === HR ? 'Fins a 60 km' : BANDS[r].short;
+  const s60 = a => a.slice(0, NR).reduce((x, y) => x + y, 0);
+  const withSum = a => a.slice(0, NR).concat([s60(a), a[NR]]); // rings, then total up to 60 km, then beyond 60 km
+  const ROWS = Array.from({ length: NR }, (_, r) => r).concat([HR, NR]); // index order for split chart and table
+  const HH = { ll: HD.households.map(withSum), hp: HD.householdPop.map(withSum), built: HD.built.map(withSum) };
+  const rowOf = r => r === HR ? NR : r === NR ? NR + 1 : r; // ring id -> position in withSum arrays
+  const fmtD = new Intl.NumberFormat('ca-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const pctV = v => (v >= 0.05 ? '+' : v <= -0.05 ? '−' : '') + (Math.abs(v) < 10 ? fmtD.format(Math.abs(v)) : fmt.format(Math.round(Math.abs(v)))) + '\u00a0%';
+  const kTxt = v => (v < 0 ? '−' : '') + fmt.format(Math.round(Math.abs(v) / 1000)) + ' mil';
+  const DEC_Y = [[1981, 1990], [1991, 2000], [2001, 2010], [2011, 2020]];
+  const avgPop = (r, [a, b]) => { let s = 0; for (let y = a; y <= b; y++) s += bandSeries[r][y - Y0]; return s / (b - a + 1); };
+  const BRATE = HD.built.map((row, d) => row.map((v, r) => v / avgPop(r, DEC_Y[d]) / 10 * 1000)); // per 1,000 inhabitants and year
+  const SIZE = HD.years.map((_, k) => HD.householdPop[k].map((p, r) => p / HD.households[k][r]));
+  const PERIODS = [{ n: '1991–2021', k0: 0, k1: 3, d: [1, 2, 3] }, { n: '1991–2001', k0: 0, k1: 1, d: [1] }, { n: '2001–2011', k0: 1, k1: 2, d: [2] }, { n: '2011–2021', k0: 2, k1: 3, d: [3] }];
+  let period = 0, h1G = null, h2G = null, h3G = null;
+  function splitVals(p) {
+    const P = PERIODS[p];
+    return ROWS.map(r => {
+      const i = rowOf(r), H0 = HH.ll[P.k0][i], H1 = HH.ll[P.k1][i], P0 = HH.hp[P.k0][i], P1 = HH.hp[P.k1][i];
+      const nb = P.d.reduce((a, d) => a + HH.built[d][i], 0), pop = 100 * (P1 / P0 - 1), hh = 100 * (H1 / H0 - 1);
+      return { r, pop, size: hh - pop, hh, built: 100 * nb / H0, dH: H1 - H0, nb, s0: P0 / H0, s1: P1 / H1 };
+    });
+  }
+  function niceDomain(vals) {
+    let lo = Math.min(0, ...vals), hi = Math.max(0, ...vals);
+    const span = hi - lo, step = [2, 5, 10, 20, 25, 50].find(s => span / s <= 6) || 100;
+    return { lo: Math.floor(lo / step) * step, hi: Math.ceil(hi / step) * step, step };
+  }
+  const SPLIT_DOM = [[0], [1, 2, 3]].map(ps => niceDomain(ps.flatMap(p => splitVals(p).flatMap(v => [v.pop, v.size, v.hh, v.built]))));
+  {
+    const all60 = i => HH.ll[i][NR], pop60 = i => HH.hp[i][NR];
+    const hh = 100 * (all60(3) / all60(0) - 1), pp = 100 * (pop60(3) / pop60(0) - 1);
+    const s91 = pop60(0) / all60(0), s21 = pop60(3) / all60(3);
+    const b90s = HH.built[1][NR] + HH.built[2][NR] + HH.built[3][NR], b10 = HH.built[3][NR], b00 = HH.built[2][NR];
+    const late = splitVals(3)[NR];
+    $('hlede').innerHTML = `Entre 1991 i 2021, a menys de 60 km de Barcelona, les llars han crescut un <b>${pctV(hh)}</b> i la gent que hi viu, un <b>${pctV(pp)}</b>. La diferència és que cada llar té menys gent: de <b>${fmt2.format(s91)}</b> a <b>${fmt2.format(s21)}</b> persones. Amb la mateixa població calen més habitatges. S'hi han construït <b>${kTxt(b90s)}</b> habitatges que avui són primera residència, però entre 2011 i 2020 només <b>${kTxt(b10)}</b>, un <b>${fmt.format(Math.round(100 * b10 / b00))}&nbsp;%</b> dels de la dècada anterior.` +
+      (late.pop > late.hh ? ` Des del 2011 la població ha crescut més que les llars (${pctV(late.pop)} contra ${pctV(late.hh)}): la gent comparteix més l'habitatge.` : '');
+    const decCols = d => T.t[d];
+    // data table
+    const th = v => fmt.format(Math.round(v / 1000));
+    $('tbl2').innerHTML = `<caption>Llars i habitatges nous en milers. Habitatges nous: primeres residències del 2021 segons la dècada de construcció.</caption><thead><tr><th>Anell</th><th>Llars 1991</th><th>Llars 2021</th>${HD.years.map(y => `<th>Pers./llar ${y}</th>`).join('')}${HD.decades.map(d => `<th>Hab. nous ${d}</th>`).join('')}</tr></thead><tbody>` +
+      ROWS.map(r => { const i = rowOf(r); return `<tr${r === HR ? ' class="sum"' : ''}><td>${r === 0 ? 'Barcelona ciutat' : r === HR ? 'Fins a 60 km' : r === NR ? 'Més de 60 km' : BANDS[r].short}</td><td>${th(HH.ll[0][i])}</td><td>${th(HH.ll[3][i])}</td>${HD.years.map((_, k) => `<td>${fmt2.format(HH.hp[k][i] / HH.ll[k][i])}</td>`).join('')}${HD.decades.map((_, d) => `<td>${th(HH.built[d][i])}</td>`).join('')}</tr>`; }).join('') + '</tbody>';
+  }
+  function keyHTML(items) { return items.map(([cls, color, label]) => `<span><i class="${cls}" style="${color ? 'background:' + color : ''}"></i>${label}</span>`).join(''); }
+  function drawHousing() {
+    const w1 = $('h1Box').clientWidth, w3 = $('h3Box').clientWidth;
+    if (!w1 || !w3) return;
+    const narrow = w3 < 560, rows8 = Array.from({ length: HR }, (_, r) => rName(r));
+    // 1) new dwellings per 1,000 inhabitants and year
+    const rmax = Math.max(...BRATE.flat());
+    const top1 = Math.ceil(rmax / 5) * 5;
+    h1G = CH.dots({ w: w1, rows: rows8, labelW: 92, rowH: 30, surface: T.card, lo: 0, hi: top1, ticks: Array.from({ length: top1 / 5 + 1 }, (_, i) => i * 5), fmtTick: v => fmt.format(v),
+      series: HD.decades.map((d, k) => ({ name: d, color: T.t[k], values: BRATE[k] })) });
+    $('h1').setAttribute('viewBox', `0 0 ${w1} ${h1G.h}`); $('h1').innerHTML = h1G.svg;
+    $('k1').innerHTML = keyHTML(HD.decades.map((d, k) => ['dot', T.t[k], d]));
+    // 2) persons per household at each census
+    const w2 = $('h2Box').clientWidth;
+    const sv = SIZE.flat(), lo2 = Math.floor(Math.min(...sv) * 5) / 5, hi2 = Math.ceil(Math.max(...sv) * 5) / 5;
+    const tk2 = []; for (let v = lo2; v <= hi2 + 1e-9; v += w2 < 420 ? 0.4 : 0.2) tk2.push(Math.round(v * 10) / 10);
+    h2G = CH.dots({ w: w2, rows: rows8, labelW: 92, rowH: 30, surface: T.card, lo: lo2, hi: hi2, ticks: tk2, fmtTick: v => fmtD.format(v),
+      series: HD.years.map((y, k) => ({ name: String(y), color: T.t[k], values: SIZE[k] })) });
+    $('h2').setAttribute('viewBox', `0 0 ${w2} ${h2G.h}`); $('h2').innerHTML = h2G.svg;
+    $('k2').innerHTML = keyHTML(HD.years.map((y, k) => ['dot', T.t[k], y]));
+    // 3) household growth split into population and household size, with the new dwellings
+    drawSplit();
+    $('k3').innerHTML = keyHTML([['sq', T.cpop, 'Creixement de la població'], ['sq', T.csize, 'Canvi de mida de les llars'], ['tick', '', 'Habitatges nous']]);
+  }
+  function drawSplit() {
+    const w = $('h3Box').clientWidth, narrow = w < 560, V = splitVals(period), dom = SPLIT_DOM[period === 0 ? 0 : 1];
+    const st = dom.step * (narrow && (dom.hi - dom.lo) / dom.step > 4 ? 2 : 1), ticks = [];
+    for (let k = Math.ceil(dom.lo / st); k * st <= dom.hi + 1e-9; k++) ticks.push(k * st || 0);
+    h3G = CH.split({ w, rows: V.map(v => rName(v.r)), labelW: narrow ? 84 : 104, valueW: narrow ? 58 : 176, rowH: 34, surface: T.card, lo: dom.lo, hi: dom.hi, ticks, fmtTick: v => (v > 0 ? '+' : '') + fmt.format(v) + '\u00a0%',
+      colors: { a: T.cpop, b: T.csize }, a: V.map(v => v.pop), b: V.map(v => v.size), mark: V.map(v => v.built),
+      value: i => narrow ? `<tspan class="vv">${pctV(V[i].hh)}</tspan>` : `<tspan class="vl">llars </tspan><tspan class="vv">${pctV(V[i].hh)}</tspan><tspan class="vl" dx="10">habitatges </tspan><tspan class="vv">${pctV(V[i].built)}</tspan>` });
+    $('h3').setAttribute('viewBox', `0 0 ${w} ${h3G.h}`); $('h3').innerHTML = h3G.svg;
+    PERIODS.forEach((_, p) => $('pr' + p).setAttribute('aria-pressed', p === period));
+  }
+  PERIODS.forEach((_, p) => $('pr' + p).addEventListener('click', () => { period = p; $('h3Tip').hidden = true; drawSplit(); }));
+  // row tooltips: hover with a mouse, tap on touch
+  function rowTip(svgId, tipId, getG, html) {
+    const svg = $(svgId), tip = $(tipId);
+    const at = e => { const g = getG(); if (!g) return -1; const r = svg.getBoundingClientRect(); const i = Math.floor((e.clientY - r.top - g.t) / g.rowH); return i >= 0 && i < Math.round((g.h - g.t - 22) / g.rowH) ? i : -1; };
+    const show = (e, i) => {
+      if (i < 0) { tip.hidden = true; return; }
+      tip.innerHTML = html(i); tip.hidden = false;
+      const g = getG(), bw = svg.parentNode.clientWidth, tw = tip.offsetWidth, r = svg.getBoundingClientRect();
+      const px = e.clientX - r.left, y = g.t + (i + 1) * g.rowH + 4;
+      const left = clamp(px - tw / 2, 0, Math.max(0, bw - tw));
+      tip.style.transform = `translate(${left.toFixed(0)}px, ${y.toFixed(0)}px)`;
+    };
+    svg.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') show(e, at(e)); });
+    svg.addEventListener('pointerleave', () => { tip.hidden = true; });
+    svg.addEventListener('click', e => { const i = at(e); if (!tip.hidden && tip.dataset.i === String(i)) { tip.hidden = true; return; } tip.dataset.i = i; show(e, i); });
+  }
+  const tr = (color, v, label, cls) => `<tr><td class="k">${color ? `<i style="border-color:${color}"></i>` : ''}</td><td class="v">${v}</td><td>${label}</td>${cls != null ? `<td class="c">${cls}</td>` : ''}</tr>`;
+  rowTip('h1', 'h1Tip', () => h1G, i => `<h4>${rName(i)}</h4><table>${HD.decades.map((d, k) => tr(T.t[k], fmtD.format(BRATE[k][i]), d, kTxt(HD.built[k][i]))).join('')}</table>`);
+  rowTip('h2', 'h2Tip', () => h2G, i => `<h4>${rName(i)}: persones per llar</h4><table>${HD.years.map((y, k) => tr(T.t[k], fmt2.format(SIZE[k][i]), y, kTxt(HD.households[k][i]) + ' llars')).join('')}</table>`);
+  rowTip('h3', 'h3Tip', () => h3G, i => {
+    const v = splitVals(period)[i];
+    return `<h4>${rName(v.r)} · ${PERIODS[period].n}</h4><table>` + tr(T.cpop, pctV(v.pop), 'creixement de la població') + tr(T.csize, pctV(v.size), v.size >= 0 ? 'llars més petites' : 'llars més grans') +
+      tr('', pctV(v.hh), 'llars noves', kTxt(v.dH)) + tr(T.ink, pctV(v.built), 'habitatges nous', kTxt(v.nb)) + tr('', fmt2.format(v.s0) + ' → ' + fmt2.format(v.s1), 'persones per llar') + '</table>';
+  });
   function updateCharts() {
     if (!stackG) return;
     const yr = hoverYear != null ? hoverYear : year, fi = clamp(yr - Y0, 0, Y1 - Y0), yi = Math.floor(yr + 1e-6);

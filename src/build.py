@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build index.html from src/template.html, src/charts.js and data/municipis.json.
+"""Build index.html from src/template.html, src/charts.js, data/municipis.json and data/habitatge-anells.json.
 
     python3 src/build.py                    writes index.html (the complete page served by GitHub Pages)
     python3 src/build.py --fragment OUT     also writes the page without <html>/<head>/<body>
@@ -12,9 +12,10 @@ root = pathlib.Path(__file__).resolve().parent.parent
 template = (root / 'src/template.html').read_text(encoding='utf-8')
 data = (root / 'data/municipis.json').read_text(encoding='utf-8')
 charts = (root / 'src/charts.js').read_text(encoding='utf-8')
-assert '</' not in data and '</script' not in charts.lower()
+housing = (root / 'data/habitatge-anells.json').read_text(encoding='utf-8').strip()
+assert '</' not in data and '</' not in housing and '</script' not in charts.lower()
 
-page = template.replace('/*CHARTS*/', charts, 1).replace('/*DATA*/', data, 1)
+page = template.replace('/*CHARTS*/', charts, 1).replace('/*DATA*/', data, 1).replace('/*HDATA*/', housing, 1)
 head, body = page.split('<div id="app">', 1)
 doc = (
     '<!doctype html>\n<html lang="ca">\n<head>\n<meta charset="utf-8">\n'

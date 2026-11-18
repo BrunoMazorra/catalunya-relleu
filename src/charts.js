@@ -79,5 +79,52 @@
     return { svg: s, X, Y, x0, x1, y0, y1, pct };
   }
 
-  root.RelleuCharts = { stack, mini, esc };
+  /* Dot plot: one row per ring, one dot per series (a decade or a census year).
+     o = { w, rows: [label], series: [{ name, color, values: [] }], lo, hi, ticks, fmtTick, labelW, rowH, surface } */
+  function dots(o) {
+    const R = o.rows.length, rowH = o.rowH || 30, m = { l: o.labelW, r: 14, t: 24, b: 22 };
+    const x0 = m.l, x1 = o.w - m.r, h = m.t + R * rowH + m.b;
+    const X = v => x0 + (x1 - x0) * (v - o.lo) / (o.hi - o.lo), RY = i => m.t + i * rowH + rowH / 2;
+    let s = '';
+    for (const t of o.ticks) s += `<line class="grid" x1="${f1(X(t))}" x2="${f1(X(t))}" y1="${m.t - 6}" y2="${f1(m.t + R * rowH)}"/><text x="${f1(X(t))}" y="${f1(m.t + R * rowH + 15)}" text-anchor="middle">${o.fmtTick(t)}</text>`;
+    // direct labels go on the row whose dots are furthest apart, if they fit
+    let best = -1, bestGap = 0;
+    o.rows.forEach((_, i) => {
+      const xs = o.series.map(se => X(se.values[i])).sort((a, b) => a - b);
+      let g = Infinity; for (let k = 1; k < xs.length; k++) g = Math.min(g, xs[k] - xs[k - 1]);
+      if (g > bestGap) { bestGap = g; best = i; }
+    });
+    o.rows.forEach((label, i) => {
+      const y = RY(i), xs = o.series.map(se => X(se.values[i]));
+      s += `<text class="nm" x="0" y="${f1(y + 4)}">${esc(label)}</text>`;
+      s += `<line class="leader" x1="${f1(Math.min(...xs))}" x2="${f1(Math.max(...xs))}" y1="${f1(y)}" y2="${f1(y)}"/>`;
+      o.series.forEach((se, k) => { s += `<circle cx="${f1(xs[k])}" cy="${f1(y)}" r="5.5" fill="${se.color}" stroke="${o.surface}" stroke-width="2"/>`; });
+      if (i === best && bestGap >= 58) o.series.forEach((se, k) => { s += `<text x="${f1(xs[k])}" y="${f1(y - 11)}" text-anchor="middle">${esc(se.name)}</text>`; });
+    });
+    return { svg: s, h, X, RY, x0, x1, t: m.t, rowH };
+  }
+
+  /* Bars that split one change into two parts (which may have opposite signs), plus a tick for a third value.
+     o = { w, rows: [label], a: [], b: [], mark: [], lo, hi, ticks, fmtTick, colors: { a, b }, labelW, valueW, rowH, surface, value(i) } */
+  function split(o) {
+    const R = o.rows.length, rowH = o.rowH || 36, m = { l: o.labelW, r: o.valueW, t: 8, b: 22 };
+    const x0 = m.l, x1 = o.w - m.r, h = m.t + R * rowH + m.b, bh = 14;
+    const X = v => x0 + (x1 - x0) * (v - o.lo) / (o.hi - o.lo), RY = i => m.t + i * rowH + rowH / 2, z = X(0);
+    let s = '';
+    for (const t of o.ticks) s += `<line class="${t === 0 ? 'zero' : 'grid'}" x1="${f1(X(t))}" x2="${f1(X(t))}" y1="${m.t}" y2="${f1(m.t + R * rowH)}"/><text x="${f1(X(t))}" y="${f1(m.t + R * rowH + 15)}" text-anchor="middle">${o.fmtTick(t)}</text>`;
+    o.rows.forEach((label, i) => {
+      const y = RY(i), a = o.a[i], b = o.b[i], same = a === 0 || Math.sign(a) === Math.sign(b);
+      const bs = same ? a : 0;
+      const rect = (v0, v1, fill) => { const xa = Math.min(X(v0), X(v1)), w = Math.abs(X(v1) - X(v0)); return w < 0.5 ? '' : `<rect x="${f1(xa)}" y="${f1(y - bh / 2)}" width="${f1(w)}" height="${bh}" rx="2" fill="${fill}"/>`; };
+      s += `<text class="nm" x="0" y="${f1(y + 4)}">${esc(label)}</text>`;
+      s += rect(0, a, o.colors.a) + rect(bs, bs + b, o.colors.b);
+      const jx = same ? X(a) : z;
+      s += `<line x1="${f1(jx)}" x2="${f1(jx)}" y1="${f1(y - bh / 2 - 1)}" y2="${f1(y + bh / 2 + 1)}" stroke="${o.surface}" stroke-width="2"/>`;
+      s += `<line class="mark" x1="${f1(X(o.mark[i]))}" x2="${f1(X(o.mark[i]))}" y1="${f1(y - 11)}" y2="${f1(y + 11)}"/>`;
+      s += `<text x="${f1(x1 + 10)}" y="${f1(y + 4)}">${o.value(i)}</text>`;
+    });
+    return { svg: s, h, X, RY, x0, x1, t: m.t, rowH };
+  }
+
+  root.RelleuCharts = { stack, mini, dots, split, esc };
 })(typeof window !== 'undefined' ? window : globalThis);
