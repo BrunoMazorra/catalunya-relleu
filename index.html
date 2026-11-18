@@ -123,7 +123,7 @@ details[open] summary::after { content: "−"; }
 .rank .vl { font-family: var(--font-data); font-size: 11px; font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
 .rank .bar { grid-column: 1 / -1; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
 .rank .bar i { display: block; height: 100%; border-radius: 2px; }
-.note { margin: 0; font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+.panel-note { margin: 0; font-size: 11.5px; color: var(--muted); line-height: 1.45; }
 .source { font-size: 10.5px; color: var(--muted); line-height: 1.45; margin: 0; }
 .source a { color: inherit; }
 
@@ -151,7 +151,7 @@ details[open] summary::after { content: "−"; }
 #tip table { border-collapse: collapse; width: 100%; }
 #tip td { padding: 1px 0; color: var(--muted); }
 #tip td:last-child { text-align: right; font-family: var(--font-data); color: var(--fg); font-variant-numeric: tabular-nums; padding-left: 10px; white-space: nowrap; }
-#tip .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+#tip .tip-sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
 
 .linkbtn { align-self: flex-start; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
 .linkbtn:hover, .peek:hover { background: var(--card); }
@@ -167,14 +167,18 @@ details[open] summary::after { content: "−"; }
 .peek:focus-visible, .linkbtn:focus-visible, svg.chart:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .below { padding-block: 12px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .below:focus { outline: none; }
+/* inside the Atles the site bar stays on top: leave room for it */
+.below { scroll-margin-top: calc(var(--topbar-h, 0px) + 8px); }
 .below-in { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
 .sec-head { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; }
 h2 { margin: 0; font-size: 30px; line-height: 1.05; font-weight: 780; font-stretch: 115%; letter-spacing: -0.01em; text-wrap: balance; }
 .lede { margin: 0; max-width: 68ch; font-size: 15px; line-height: 1.5; text-wrap: pretty; }
 .lede b { font-weight: 700; }
-.card { margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.chart-card { margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .fig-head h3 { margin: 0; font-size: 16px; font-weight: 700; line-height: 1.25; text-wrap: balance; }
 .fig-sub { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); line-height: 1.45; max-width: 82ch; text-wrap: pretty; }
+.fig-note { margin: 0; padding-top: 10px; border-top: 1px solid var(--line); font-size: 12px; line-height: 1.5; color: var(--muted); max-width: 82ch; text-wrap: pretty; }
+.fig-note b { color: var(--fg); font-weight: 650; }
 .readout { margin: 0; font-size: 13.5px; line-height: 1.4; min-height: 1.4em; }
 .readout b { font-weight: 700; }
 .plot { position: relative; min-width: 0; }
@@ -201,7 +205,7 @@ svg.chart .wash { fill-opacity: 0.6; }
 .ctip td.c { font-family: var(--font-data); color: var(--muted); text-align: right; padding-left: 10px; font-variant-numeric: tabular-nums; }
 .scale-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
 .scale-row .h3 { margin: 0; }
-.scale-row .scale { width: min(280px, 100%); display: flex; flex-direction: column; gap: 3px; }
+.scale-row .lg-scale { width: min(280px, 100%); display: flex; flex-direction: column; gap: 3px; }
 .mult { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px 18px; }
 .mp { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .mh { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
@@ -237,7 +241,7 @@ svg.chart tspan.vv { fill: var(--fg); font-weight: 600; }
   .mult { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 14px; }
   h2 { font-size: 24px; }
   .lede { font-size: 14px; }
-  .card { padding: 12px; }
+  .chart-card { padding: 12px; }
 }
 
 .mobile-year { display: none; font-size: 30px; font-weight: 800; font-stretch: 72%; line-height: 1; font-variant-numeric: tabular-nums; }
@@ -305,7 +309,7 @@ svg.chart tspan.vv { fill: var(--fg); font-weight: 600; }
             <h3 class="h3" id="rankTitle">Municipis que més han crescut</h3>
             <ol class="rank" id="rank"></ol>
           </section>
-          <p class="note">La distància es mesura des de la plaça de Catalunya fins al centre de cada municipi. Barcelona ciutat i la primera corona (L'Hospitalet, Badalona, Santa Coloma, Cornellà…) ja eren plenes el 1981: van perdre gent fins al 2001 i després l'han recuperat. El creixement s'ha fet entre 10 i 60 km.</p>
+          <p class="panel-note">La distància es mesura des de la plaça de Catalunya fins al centre de cada municipi. Barcelona ciutat i la primera corona (L'Hospitalet, Badalona, Santa Coloma, Cornellà…) ja eren plenes el 1981: van perdre gent fins al 2001 i després l'han recuperat. El creixement s'ha fet entre 10 i 60 km.</p>
           <p class="source">Fonts: Idescat, <a href="https://www.idescat.cat/pub/?id=pmh&amp;n=446&amp;lang=ca" target="_blank" rel="noopener">padró municipal</a> 1998–2025 i <a href="https://www.idescat.cat/pub/?id=shd&amp;n=1341&amp;lang=ca" target="_blank" rel="noopener">sèries històriques</a> 1981, 1986 i 1991 (població de fet); entre aquests anys s'interpola i cada any s'ajusta al total de Catalunya. 2026: avanç provisional per províncies. Contorns municipals: INE (es-atlas), simplificats.</p>
         </div>
       </details>
@@ -323,7 +327,7 @@ svg.chart tspan.vv { fill: var(--fg); font-weight: 600; }
   <div id="tip" hidden></div>
 </div>
 
-<button type="button" class="peek" id="peek">Gràfiques: població, habitatge i llars per anells de distància <span aria-hidden="true">↓</span></button>
+<button type="button" class="peek" id="peek">Gràfiques: població, llars i habitatge <span aria-hidden="true">↓</span></button>
 
 <main class="below" id="charts" tabindex="-1">
   <div class="below-in">
@@ -332,7 +336,7 @@ svg.chart tspan.vv { fill: var(--fg); font-weight: 600; }
       <p class="lede" id="lede"></p>
     </header>
 
-    <figure class="card">
+    <figure class="chart-card">
       <figcaption class="fig-head">
         <h3>Quanta gent viu fins a 10, 20, 30… 60 km de la plaça de Catalunya</h3>
         <p class="fig-sub">Cada franja és un anell de 10 km. La vora de dalt de cada franja és el total acumulat fins a aquella distància. El color és el canvi de població de l'anell des de 1981, amb la mateixa escala que el mapa. Fes clic al gràfic per portar el mapa a aquell any.</p>
@@ -344,11 +348,11 @@ svg.chart tspan.vv { fill: var(--fg); font-weight: 600; }
       </div>
       <div class="scale-row">
         <h3 class="h3">Color: canvi des de 1981</h3>
-        <div class="scale"><div class="legend-bar" id="lg2"></div><div class="legend-ticks" id="lgT2"></div></div>
+        <div class="lg-scale"><div class="legend-bar" id="lg2"></div><div class="legend-ticks" id="lgT2"></div></div>
       </div>
     </figure>
 
-    <figure class="card">
+    <figure class="chart-card">
       <figcaption class="fig-head">
         <h3>Canvi de població des de 1981, anell per anell</h3>
         <p class="fig-sub">Percentatge respecte a 1981. Tots els gràfics tenen la mateixa escala vertical. Passa el ratolí per sobre o toca un gràfic per veure un any.</p>
@@ -356,7 +360,7 @@ svg.chart tspan.vv { fill: var(--fg); font-weight: 600; }
       <div class="mult" id="mult"></div>
     </figure>
 
-    <details class="card tablecard" id="tableCard">
+    <details class="chart-card tablecard" id="tableCard">
       <summary>Taula de dades: població per anells</summary>
       <div class="tablewrap"><table id="tbl" class="dtable"></table></div>
     </details>
@@ -367,7 +371,7 @@ svg.chart tspan.vv { fill: var(--fg); font-weight: 600; }
     </header>
 
     <div class="duo">
-      <figure class="card">
+      <figure class="chart-card">
         <figcaption class="fig-head">
           <h3>Habitatges nous per cada 1.000 habitants i any</h3>
           <p class="fig-sub">Habitatges que el 2021 eren primera residència, segons la dècada en què es van construir, dividits per la població mitjana de l'anell en aquella dècada.</p>
@@ -375,17 +379,18 @@ svg.chart tspan.vv { fill: var(--fg); font-weight: 600; }
         <div class="key2" id="k1"></div>
         <div class="plot" id="h1Box"><svg class="chart" id="h1" role="img" aria-label="Habitatges nous per cada 1.000 habitants i any, per anell i dècada de construcció"></svg><div class="ctip" id="h1Tip" hidden></div></div>
       </figure>
-      <figure class="card">
+      <figure class="chart-card">
         <figcaption class="fig-head">
           <h3>Persones per llar</h3>
           <p class="fig-sub">Mitjana de persones per llar a cada cens. Entre 1991 i 2011 les llars es van fer més petites a tots els anells; entre 2011 i 2021, a gairebé tots han tornat a créixer una mica.</p>
         </figcaption>
         <div class="key2" id="k2"></div>
         <div class="plot" id="h2Box"><svg class="chart" id="h2" role="img" aria-label="Persones per llar per anell als censos de 1991, 2001, 2011 i 2021"></svg><div class="ctip" id="h2Tip" hidden></div></div>
+        <p class="fig-note"><b>Com es calcula.</b> Una llar és el grup de persones que viuen habitualment al mateix habitatge, siguin família o no (definició del cens). Per a cada municipi i cens, Idescat publica el nombre de llars i el nombre mitjà de persones per llar. Per a cada anell multipliquem aquestes dues xifres a cada municipi, ho sumem (són les persones que viuen en llars) i ho dividim pel total de llars de l'anell. No hi compta la gent que viu en residències, convents, casernes o altres establiments col·lectius.</p>
       </figure>
     </div>
 
-    <figure class="card">
+    <figure class="chart-card">
       <figcaption class="fig-head">
         <h3>Llars noves i habitatges nous, en % de les llars a l'inici del període</h3>
         <p class="fig-sub">Cada barra és el creixement del nombre de llars, partit en dues parts: el que ve del creixement de la població (amb la mateixa mida de llar) i el que ve del canvi de mida de les llars (positiu si són més petites). La marca vertical són els habitatges nous del mateix període. Quan la barra passa la marca, s'han format més llars que habitatges s'han construït.</p>
@@ -400,9 +405,10 @@ svg.chart tspan.vv { fill: var(--fg); font-weight: 600; }
         <div class="key2" id="k3"></div>
       </div>
       <div class="plot" id="h3Box"><svg class="chart" id="h3" role="img" aria-label="Creixement de les llars per anell, partit entre creixement de la població i canvi de mida de les llars, amb els habitatges nous"></svg><div class="ctip" id="h3Tip" hidden></div></div>
+      <p class="fig-note"><b>Com es calcula.</b> Població vol dir aquí la gent que viu en llars, la mateixa que surt a «Persones per llar»; per això pot diferir una mica de la del padró. La part lila és el creixement d'aquesta població. La part groga és la resta del creixement de les llars, que només pot venir de canvis en el nombre de persones per llar. Les dues sumen el creixement de les llars. Els habitatges nous són les primeres residències del 2021 construïdes en aquells anys, en % de les llars a l'inici del període.</p>
     </figure>
 
-    <details class="card tablecard" id="tableCard2">
+    <details class="chart-card tablecard" id="tableCard2">
       <summary>Taula de dades: llars i habitatges per anells</summary>
       <div class="tablewrap"><table id="tbl2" class="dtable"></table></div>
     </details>
@@ -989,7 +995,7 @@ svg.chart tspan.vv { fill: var(--fg); font-weight: 600; }
     const r = $('mg' + k).getBoundingClientRect(), g = multG[k];
     goYear(clamp(Math.round(Y0 + (e.clientX - r.left - g.x0) / (g.x1 - g.x0) * (Y1 - Y0)), Y0, Y1));
   });
-  const toCharts = () => $('charts').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  const toCharts = () => $('charts').scrollIntoView({ block: 'start' });
   $('peek').addEventListener('click', toCharts);
   $('toCharts').addEventListener('click', toCharts);
   let chartRaf = 0, lastChartW = 0;
@@ -1004,7 +1010,7 @@ svg.chart tspan.vv { fill: var(--fg); font-weight: 600; }
     tip.innerHTML = `<h4>${cap(M[m].n)}</h4><p class="com">${M[m].com} · ${fmt.format(Math.round(distKm[m]))} km de la plaça de Catalunya</p><table>
       <tr><td>Població ${Math.floor(year + 1e-6)}</td><td>${fmt.format(Math.round(p))}</td></tr>
       <tr><td>Població 1981</td><td>${fmt.format(Math.round(pop81[m]))}</td></tr>
-      <tr><td><span class="sw" style="background:${cssChg(ratio[m])}"></span>Canvi</td><td>${sgn(g)}${fmt.format(Math.round(Math.abs(g)))} (${pctTxt(ratio[m])})</td></tr>
+      <tr><td><span class="tip-sw" style="background:${cssChg(ratio[m])}"></span>Canvi</td><td>${sgn(g)}${fmt.format(Math.round(Math.abs(g)))} (${pctTxt(ratio[m])})</td></tr>
       <tr><td>Densitat</td><td>${fmt.format(Math.round(p / Math.max(M[m].a, 0.3)))} hab./km²</td></tr></table>`;
     tip.hidden = false;
     const W = app.clientWidth, Hh = app.clientHeight, tw = tip.offsetWidth, th = tip.offsetHeight;
