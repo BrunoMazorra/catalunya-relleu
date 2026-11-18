@@ -1,10 +1,10 @@
 # Catalunya en relleu
 
-> **Repositori arxivat.** El treball continua a [reserca-vivenda](https://github.com/BrunoMazorra/reserca-vivenda), al tema [`creixement/`](https://github.com/BrunoMazorra/reserca-vivenda/tree/main/creixement). La pàgina és a l'[Atles de l'habitatge](https://brunomazorra.github.io/reserca-vivenda/#catalunya).
+> **Repositori arxivat.** El treball continua a [reserca-vivenda](https://github.com/BrunoMazorra/reserca-vivenda), al tema [`creixement/`](https://github.com/BrunoMazorra/reserca-vivenda/tree/main/creixement). La pàgina és a [brunomazorra.github.io/reserca-vivenda/catalunya-relleu](https://brunomazorra.github.io/reserca-vivenda/catalunya-relleu/) i dins de l'[Atles de l'habitatge](https://brunomazorra.github.io/reserca-vivenda/#catalunya). L'adreça antiga d'aquest repositori hi redirigeix.
 
 Mapa 3D de la població dels municipis de Catalunya, de 1981 a 2026, centrat en el voltant de Barcelona.
 
-**Pàgina web: https://brunomazorra.github.io/catalunya-relleu/**
+**Pàgina web: https://brunomazorra.github.io/reserca-vivenda/catalunya-relleu/** (l'adreça antiga hi redirigeix)
 
 Cada municipi és un prisma: l'alçada és la densitat de població i el color, el canvi de població des de 1981. La barra de temps va de 1981 a 2026, i els cercles marquen la distància a la plaça de Catalunya cada 10 km. A sota del mapa hi ha gràfiques de població, habitatge i persones per llar per anells de distància, amb taules de dades.
 
