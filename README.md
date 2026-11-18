@@ -1,5 +1,7 @@
 # Catalunya en relleu
 
+> **Repositori arxivat.** El treball continua a [reserca-vivenda](https://github.com/BrunoMazorra/reserca-vivenda), al tema [`creixement/`](https://github.com/BrunoMazorra/reserca-vivenda/tree/main/creixement). La pàgina és a l'[Atles de l'habitatge](https://brunomazorra.github.io/reserca-vivenda/#catalunya).
+
 Mapa 3D de la població dels municipis de Catalunya, de 1981 a 2026, centrat en el voltant de Barcelona.
 
 **Pàgina web: https://brunomazorra.github.io/catalunya-relleu/**
